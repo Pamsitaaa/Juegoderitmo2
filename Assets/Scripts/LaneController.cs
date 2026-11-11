@@ -10,7 +10,7 @@ public class LaneController : MonoBehaviour
 
     private List<GameObject> notesInZone = new List<GameObject>();
     private Vector3 originalScale;
-    private SpriteRenderer spriteRenderer; // Para el efecto de brillo/color
+    private SpriteRenderer spriteRenderer;
     private Color originalColor;
 
     void Start()
@@ -25,6 +25,9 @@ public class LaneController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Limpiamos referencias nulas por si acaso una nota se desactivó en el aire
+        notesInZone.RemoveAll(item => item == null || !item.activeInHierarchy);
+
         if (collision.CompareTag("Note") || collision.gameObject.name.Contains("arrows") || collision.gameObject.name.Contains("Square"))
         {
             if (!notesInZone.Contains(collision.gameObject))
@@ -65,33 +68,38 @@ public class LaneController : MonoBehaviour
 
     void HitNote()
     {
-        // Efecto visual: se hace un poco más grande o rebota y cambia de color (brillo)
-        transform.localScale = originalScale * 1.15f; // Crece un poquito al golpear
+        // Efecto visual: se hace un poco más grande y cambia a blanco (brillo)
+        transform.localScale = originalScale * 1.15f;
         if (spriteRenderer != null)
         {
-            spriteRenderer.color = Color.white; // Se pone brillante/blanco al presionar
+            spriteRenderer.color = Color.white;
         }
+
+        // Limpiamos notas inactivas de la lista por seguridad
+        notesInZone.RemoveAll(item => item == null || !item.activeInHierarchy);
 
         if (notesInZone.Count > 0)
         {
-            GameObject noteToDestroy = notesInZone[0];
+            GameObject noteToHit = notesInZone[0];
             notesInZone.RemoveAt(0);
 
-            float distance = Vector3.Distance(noteToDestroy.transform.position, transform.position);
+            float distance = Vector3.Distance(noteToHit.transform.position, transform.position);
 
             if (ScoreManager.Instance != null)
             {
                 ScoreManager.Instance.EvaluateHit(distance);
             }
 
-            Destroy(noteToDestroy);
+            // --- REQUISITO DEL PROFE: OBJECT POOLING EN VEZ DE DESTROY ---
+            // En lugar de destruir la nota, la desactivamos para que regrese a la piscina
+            noteToHit.SetActive(false);
         }
         else
         {
-            // Si presiona la tecla pero no hay nota (Ghost Tap / Fallo en el aire)
+            // Ghost Tap (Fallo por presionar sin nota en el carril)
             if (ScoreManager.Instance != null)
             {
-                ScoreManager.Instance.RegisterGhostMiss(); // Penalización por presionar a lo tonto
+                ScoreManager.Instance.RegisterGhostMiss();
             }
         }
     }

@@ -8,7 +8,6 @@ public class NoteTiming
     public float timeInSeconds;
     public int laneIndex;
 
-    // Constructor para facilitar la creación
     public NoteTiming(float time, int lane)
     {
         timeInSeconds = time;
@@ -24,7 +23,7 @@ public class NoteSpawner : MonoBehaviour
     public Transform[] spawnPoints;
 
     [Header("Modo Editor / Grabación")]
-    public bool isRecording = true; // Actívalo en el Inspector para grabar los taps al ritmo
+    public bool isRecording = true;
 
     [Header("Patrón de la Canción (Chart)")]
     public List<NoteTiming> songNotes = new List<NoteTiming>();
@@ -34,7 +33,6 @@ public class NoteSpawner : MonoBehaviour
 
     void Update()
     {
-        // 1. Si estamos grabando el nivel con la música en vivo
         if (isRecording)
         {
             if (!songStarted && musicSource.isPlaying)
@@ -48,13 +46,12 @@ public class NoteSpawner : MonoBehaviour
                 DetectRecordingInputs();
             }
         }
-        // 2. Si estamos jugando normalmente leyendo el chart
         else
         {
             if (musicSource.isPlaying && nextIndex < songNotes.Count)
             {
                 float currentSongTime = musicSource.time;
-                float approachTime = 2.0f; // Tiempo que tarda la nota en caer desde arriba
+                float approachTime = 2.0f;
 
                 if (currentSongTime >= (songNotes[nextIndex].timeInSeconds - approachTime))
                 {
@@ -65,7 +62,6 @@ public class NoteSpawner : MonoBehaviour
         }
     }
 
-    // Detecta tus teclas mientras suena la música y anota el segundo exacto
     void DetectRecordingInputs()
     {
         if (Keyboard.current == null) return;
@@ -83,20 +79,33 @@ public class NoteSpawner : MonoBehaviour
             float hitTime = musicSource.time;
             songNotes.Add(new NoteTiming(hitTime, recordedLane));
 
-            // Instancia visualmente la nota al momento para que veas que sí la registró
             SpawnSpecificNote(recordedLane);
 
-            Debug.Log($"Nota gravada -> Tiempo: {hitTime:F2}s | Carril: {recordedLane}");
+            Debug.Log($"Nota grabada -> Tiempo: {hitTime:F2}s | Carril: {recordedLane}");
         }
     }
 
     void SpawnSpecificNote(int lane)
     {
-        if (spawnPoints.Length <= lane || notePrefabs.Length <= lane) return;
+        if (spawnPoints == null || notePrefabs == null) return;
+        if (lane < 0 || lane >= spawnPoints.Length || lane >= notePrefabs.Length) return;
 
         Transform targetSpawn = spawnPoints[lane];
         GameObject selectedNotePrefab = notePrefabs[lane];
 
-        Instantiate(selectedNotePrefab, targetSpawn.position, selectedNotePrefab.transform.rotation);
+        GameObject newNote = NotePooler.Instance.GetPooledNote(lane);
+
+        if (newNote != null && targetSpawn != null && selectedNotePrefab != null)
+        {
+            newNote.transform.position = targetSpawn.position;
+
+            // ¡Forzamos que use la rotación local exacta del prefab original!
+            newNote.transform.rotation = selectedNotePrefab.transform.rotation;
+
+            newNote.SetActive(true);
+        }
     }
+
+
+
 }

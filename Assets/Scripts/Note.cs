@@ -16,16 +16,16 @@ public class Note : MonoBehaviour
 
         transform.position += Vector3.down * currentSpeed * Time.deltaTime;
 
-        // Si la nota se pasa de largo sin ser tocada:
+        // Si la nota se pasa de largo sin ser tocada (Miss):
         if (transform.position.y < -7f)
         {
-            // ¡Avisamos al ScoreManager que hubo un fallo (Miss)!
             if (ScoreManager.Instance != null)
             {
                 ScoreManager.Instance.RegisterMiss();
             }
 
-            Destroy(gameObject);
+            // REUTILIZACIÓN OBLIGATORIA: En vez de Destroy, la apagamos para el Pool
+            gameObject.SetActive(false);
         }
     }
 }
