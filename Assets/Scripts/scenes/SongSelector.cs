@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
+
+
 [System.Serializable]
 public class SongData
 {
@@ -16,6 +18,22 @@ public class SongData
 
 public class SongSelector : MonoBehaviour
 {
+    [System.Serializable]
+    public class SongData
+    {
+        public string songName;
+        public Sprite coverArt;
+        public AudioClip fullSong;
+        public float previewStartTime;
+        public float previewDuration = 15f;
+        public float songBPM = 120f;
+        public string sceneToLoad;       // <--- NUEVO: Nombre exacto de la escena para esta canción
+    }
+
+    [Header("Conexión con el Cargador de Escenas")]
+    public SceneLoader sceneLoader; // <--- Arrastra aquí tu objeto GameManager que tiene el SceneLoader
+
+   
     [Header("Lista de Canciones (Tu Biblioteca)")]
     public SongData[] songs;
 
@@ -203,10 +221,21 @@ public class SongSelector : MonoBehaviour
 
     public void PlaySelectedSong()
     {
-        selectedSong = songs[currentIndex];
+        SongData currentSong = songs[currentIndex];
+        selectedSong = currentSong;
 
+        // Apagamos el preview de audio del menú
         if (previewSource != null) previewSource.Stop();
 
-        SceneManager.LoadScene(gameplaySceneName);
+        // Si conectaste el SceneLoader, usamos su Fade Out elegante cargando la escena de ESTA canción
+        if (sceneLoader != null && !string.IsNullOrEmpty(currentSong.sceneToLoad))
+        {
+            sceneLoader.LoadScene(currentSong.sceneToLoad);
+        }
+        else
+        {
+            // Respaldo por si acaso: carga directa si faltara asignar algo
+            SceneManager.LoadScene(gameplaySceneName);
+        }
     }
 }

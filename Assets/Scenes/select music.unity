@@ -1063,10 +1063,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1676584090}
-        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+      - m_Target: {fileID: 1748847373}
+        m_TargetAssemblyTypeName: SongSelector, Assembly-CSharp
+        m_MethodName: PlaySelectedSong
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1210,7 +1210,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1411568842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1370,6 +1370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 021c6ce80c402a04e8d338add5c0b137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongSelector
+  sceneLoader: {fileID: 1676584090}
   songs:
   - songName: BAD APPLE
     coverArt: {fileID: 4585286939215756000, guid: 1f0230f0b87acfc4faa4389191baea9a, type: 3}
@@ -1377,11 +1378,19 @@ MonoBehaviour:
     previewStartTime: 45
     previewDuration: 15
     songBPM: 138
+    sceneToLoad: BadApple
+  - songName: PRAY 2.0
+    coverArt: {fileID: 0}
+    fullSong: {fileID: 8300000, guid: 5e34a7e3f8fbcbb41bb81adffc667cad, type: 3}
+    previewStartTime: 45
+    previewDuration: 15
+    songBPM: 180
+    sceneToLoad: Pray 2.0
   coverImage: {fileID: 442896266}
   songTitleText: {fileID: 130016721}
   previewSource: {fileID: 1748847374}
   maxPreviewVolume: 0.35
-  fadeInDuration: 1.5
+  fadeInDuration: 2
   gameplaySceneName: select music
 --- !u!82 &1748847374
 AudioSource:

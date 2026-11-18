@@ -19,7 +19,7 @@ public class NoteSpawner : MonoBehaviour
 {
     [Header("Calibración de Ritmo (Offset)")]
     [Tooltip("Súbele o bájale aquí para adelantar o atrasar las notas sin tocar la grabación.")]
-    public float globalOffset = 0.0f; // Si van tarde, ponle números negativos (ej. -0.3f). Si van temprano, positivos.
+    public float globalOffset = 0.0f;
 
     [Header("Referencias")]
     public AudioSource musicSource;
@@ -27,8 +27,8 @@ public class NoteSpawner : MonoBehaviour
     public Transform[] spawnPoints;
 
     [Header("Referencias de Audio (SFX)")]
-    public AudioSource sfxSource;   // AudioSource exclusivo para efectos (como el Fail)
-    public AudioClip failSound;     // Tu archivo de audio "Fail"
+    public AudioSource sfxSource;
+    public AudioClip failSound;
 
     [Header("Modo Editor / Grabación")]
     public bool isRecording = true;
@@ -61,8 +61,6 @@ public class NoteSpawner : MonoBehaviour
                 float currentSongTime = musicSource.time;
                 float approachTime = 2.0f;
 
-                // APLICAMOS EL OFFSET AQUÍ: 
-                // Esto engaña al sistema para que spawnee la nota antes o después sin alterar sus datos puros.
                 float targetTimeWithOffset = songNotes[nextIndex].timeInSeconds + globalOffset;
 
                 if (currentSongTime >= (targetTimeWithOffset - approachTime))
@@ -105,31 +103,58 @@ public class NoteSpawner : MonoBehaviour
         Transform targetSpawn = spawnPoints[lane];
         GameObject selectedNotePrefab = notePrefabs[lane];
 
-        // Pedimos la nota al NotePooler usando el índice exacto del carril
         GameObject newNote = NotePooler.Instance.GetPooledNote(lane);
 
         if (newNote != null && targetSpawn != null && selectedNotePrefab != null)
         {
             newNote.transform.position = targetSpawn.position;
-
-            // Respetamos la rotación original exacta del prefab
             newNote.transform.rotation = selectedNotePrefab.transform.rotation;
-
             newNote.SetActive(true);
         }
     }
 
-    // Método para reproducir el sonido de fallo cuando lo necesites
-    // Método para reproducir el sonido de fallo de forma obligatoria y sin bloqueos
-    // Método blindado para que el sonido de fallo nunca falle ni se sature
-    // Método para reproducir el sonido de fallo encimándose (polifonía de errores)
     public void PlayFailSound()
     {
         if (sfxSource != null && failSound != null)
         {
-            // ¡Ojo aquí! Usamos PlayOneShot SIN hacer .Stop() previo.
-            // Esto permite que si te equivocas 200 veces seguidas, cada error suene a la par encima del anterior.
             sfxSource.PlayOneShot(failSound);
         }
+    }
+
+    // ==========================================
+    // GENERADOR AUTOMÁTICO PARA PRAY 2.0 (4:54 min / 294 segundos)
+    // ==========================================
+    [Header("Generador Automático por BPM (Pray 2.0)")]
+    public float songStartTime = 0f;
+    public float songEndTime = 294f;  // 4 minutos con 54 segundos exactos
+
+    [ContextMenu("Generar Patrón Base 135-180 BPM")]
+    public void GenerateBpmTestPattern()
+    {
+        songNotes.Clear();
+        float currentTime = songStartTime;
+        float currentBpm = 135f;
+        int laneCycle = 0;
+
+        while (currentTime < songEndTime)
+        {
+            float beatInterval = 60f / currentBpm;
+            songNotes.Add(new NoteTiming(currentTime, laneCycle));
+
+            laneCycle = (laneCycle + 1) % 5;
+            currentTime += beatInterval;
+
+            // Calculamos el progreso porcentual a lo largo de toda la canción de 4:54 min
+            float progress = currentTime / songEndTime;
+
+            // Cambios de ritmo escalados proporcionalmente para que cubran toda la duración:
+            if (progress > 0.15f && currentBpm < 155f) currentBpm = 155f;
+            if (progress > 0.35f && currentBpm < 170f) currentBpm = 170f;
+            if (progress > 0.55f && currentBpm < 180f) currentBpm = 180f;
+            if (progress > 0.70f && currentBpm > 170f) currentBpm = 170f; // Bajón de pre-clímax
+            if (progress > 0.85f && currentBpm < 180f) currentBpm = 180f; // Cierre insano a tope
+        }
+
+        Debug.Log($"¡Patrón épico para Pray 2.0 generado con éxito! Total de notas: {songNotes.Count}");
     }
 }
