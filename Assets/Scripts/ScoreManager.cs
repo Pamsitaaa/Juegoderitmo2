@@ -25,15 +25,18 @@ public class ScoreManager : MonoBehaviour
     {
         if (distanceToTarget < 0.2f)
         {
-            RegisterHit(1000, "¡Perfecto!", new Color(1f, 0.4f, 0.7f));
+            // Rosa Neón brillante y saturado
+            RegisterHit(1000, "CRUSHING IT!", new Color(1f, 0.07f, 0.57f));
         }
         else if (distanceToTarget < 0.4f)
         {
-            RegisterHit(700, "¡Bien!", new Color(0.3f, 0.6f, 1f));
+            // Azul Cian Neón
+            RegisterHit(700, "CHUNKY!", new Color(0f, 1f, 1f));
         }
         else
         {
-            RegisterHit(300, "¡Regular!", new Color(1f, 0.9f, 0.2f));
+            // Amarillo Neón eléctrico
+            RegisterHit(300, "ALMOST...", new Color(0.9f, 1f, 0f));
         }
     }
 
@@ -48,29 +51,31 @@ public class ScoreManager : MonoBehaviour
         ShowRating(ratingMessage, ratingColor);
     }
 
-    // Cuando dejas pasar una nota (Miss) -> Rompe combo y BAJA PUNTUACIÓN
+    // Cuando dejas pasar una nota (Miss) -> Ahora dice MISFIRE! en Neón
     public void RegisterMiss()
     {
         combo = 0;
         multiplier = 1;
         missCount++;
 
-        score -= 500; // Penalización de puntos por dejar pasar la nota
-        if (score < 0) score = 0; // Evita que baje de 0
+        score -= 500;
+        if (score < 0) score = 0;
 
-        ShowRating("¡Mal!", new Color(1f, 0.2f, 0.2f));
+        // Rojo Sangre Neón súper agresivo para el Miss
+        ShowRating("MISFIRE!", new Color(1f, 0.05f, 0.1f));
         UpdateUIOnly();
     }
 
-    // Cuando presionas la tecla por error sin ninguna nota en el carril (Ghost Tap)
+    // Cuando presionas la tecla por error sin ninguna nota (Ghost Tap)
     public void RegisterGhostMiss()
     {
         combo = 0;
         multiplier = 1;
-        score -= 200; // Castigo leve por presionar a lo loco
+        score -= 200;
         if (score < 0) score = 0;
 
-        ShowRating("¡Fallo!", new Color(1f, 0.5f, 0.2f));
+        // Naranja Neón brillante
+        ShowRating("GHOST!", new Color(1f, 0.4f, 0f));
         UpdateUIOnly();
     }
 
@@ -97,7 +102,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = "Score: " + score;
+            scoreText.text = "SCORE: " + score;
         }
     }
 }
