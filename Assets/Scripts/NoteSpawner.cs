@@ -17,6 +17,10 @@ public class NoteTiming
 
 public class NoteSpawner : MonoBehaviour
 {
+    [Header("Calibración de Ritmo (Offset)")]
+    [Tooltip("Súbele o bájale aquí para adelantar o atrasar las notas sin tocar la grabación.")]
+    public float globalOffset = 0.0f; // Si van tarde, ponle números negativos (ej. -0.3f). Si van temprano, positivos.
+
     [Header("Referencias")]
     public AudioSource musicSource;
     public GameObject[] notePrefabs;
@@ -57,7 +61,11 @@ public class NoteSpawner : MonoBehaviour
                 float currentSongTime = musicSource.time;
                 float approachTime = 2.0f;
 
-                if (currentSongTime >= (songNotes[nextIndex].timeInSeconds - approachTime))
+                // APLICAMOS EL OFFSET AQUÍ: 
+                // Esto engaña al sistema para que spawnee la nota antes o después sin alterar sus datos puros.
+                float targetTimeWithOffset = songNotes[nextIndex].timeInSeconds + globalOffset;
+
+                if (currentSongTime >= (targetTimeWithOffset - approachTime))
                 {
                     SpawnSpecificNote(songNotes[nextIndex].laneIndex);
                     nextIndex++;
