@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c1873e428fbed489dc47c84fd2e263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneController
+  hitParticlesPrefab: {fileID: 7255837346024926634, guid: 73894604cd290dd41b66be878a8d8780, type: 3}
   laneIndex: 2
   pcKey: 32
 --- !u!61 &56599483
@@ -332,6 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c1873e428fbed489dc47c84fd2e263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneController
+  hitParticlesPrefab: {fileID: 7255837346024926634, guid: 73894604cd290dd41b66be878a8d8780, type: 3}
   laneIndex: 3
   pcKey: 97
 --- !u!61 &205132721
@@ -1191,7 +1193,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &953160872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1307,6 +1309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c1873e428fbed489dc47c84fd2e263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneController
+  hitParticlesPrefab: {fileID: 7255837346024926634, guid: 73894604cd290dd41b66be878a8d8780, type: 3}
   laneIndex: 4
   pcKey: 100
 --- !u!61 &984607237
@@ -1783,6 +1786,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c1873e428fbed489dc47c84fd2e263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneController
+  hitParticlesPrefab: {fileID: 7255837346024926634, guid: 73894604cd290dd41b66be878a8d8780, type: 3}
   laneIndex: 1
   pcKey: 101
 --- !u!61 &1556629619
@@ -2043,6 +2047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c1873e428fbed489dc47c84fd2e263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneController
+  hitParticlesPrefab: {fileID: 7255837346024926634, guid: 73894604cd290dd41b66be878a8d8780, type: 3}
   laneIndex: 0
   pcKey: 113
 --- !u!61 &1913009215
