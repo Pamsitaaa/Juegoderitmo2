@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Monou;
 
 public class SceneLoader : MonoBehaviour
 {
@@ -58,6 +59,10 @@ public class SceneLoader : MonoBehaviour
         }
 
         fadeCanvasGroup.alpha = 1f;
+
+        //Gamescraper es prefab/clase del SDK de monou y Starts en la funcion que notifica que inicio la partida.
+        GameScraper.Starts();
+
         SceneManager.LoadScene(sceneName);
     }
 

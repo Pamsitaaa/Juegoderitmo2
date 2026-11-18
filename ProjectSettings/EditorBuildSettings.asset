@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Pray 2.0.unity
     guid: bd49d65aec5344c4981487dc7f09869d
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: 6138d31e6fffcbc49b1ef9074c47e0c1
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

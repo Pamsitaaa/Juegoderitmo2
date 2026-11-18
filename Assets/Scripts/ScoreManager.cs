@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Monou;
+using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -100,6 +102,8 @@ public class ScoreManager : MonoBehaviour
 
     void UpdateUIOnly()
     {
+        score += 1;
+        GameScraper.Advance(score);
         if (scoreText != null)
         {
             scoreText.text = "SCORE: " + score;
