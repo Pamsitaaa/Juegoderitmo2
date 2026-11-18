@@ -78,6 +78,7 @@ public class LaneController : MonoBehaviour
         // Limpiamos notas inactivas de la lista por seguridad
         notesInZone.RemoveAll(item => item == null || !item.activeInHierarchy);
 
+        // --- SI SÍ HAY NOTA EN EL CARRIL (ACIERTO) ---
         if (notesInZone.Count > 0)
         {
             GameObject noteToHit = notesInZone[0];
@@ -90,13 +91,19 @@ public class LaneController : MonoBehaviour
                 ScoreManager.Instance.EvaluateHit(distance);
             }
 
-            // --- REQUISITO DEL PROFE: OBJECT POOLING EN VEZ DE DESTROY ---
-            // En lugar de destruir la nota, la desactivamos para que regrese a la piscina
+            // Desactivamos la nota para el Pool (¡AQUÍ NUNCA DEBE IR EL FAIL!)
             noteToHit.SetActive(false);
         }
         else
         {
-            // Ghost Tap (Fallo por presionar sin nota en el carril)
+            // --- SI NO HAY NOTA (GHOST TAP / FALLO EN EL AIRE) ---
+            // AQUÍ SÍ VA EL FAIL PORQUE PRESIONASTE MAL
+            NoteSpawner spawner = Object.FindFirstObjectByType<NoteSpawner>();
+            if (spawner != null)
+            {
+                spawner.PlayFailSound();
+            }
+
             if (ScoreManager.Instance != null)
             {
                 ScoreManager.Instance.RegisterGhostMiss();

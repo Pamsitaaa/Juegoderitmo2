@@ -19,6 +19,13 @@ public class Note : MonoBehaviour
         // Si la nota se pasa de largo sin ser tocada (Miss):
         if (transform.position.y < -7f)
         {
+            // --- REPRODUCIR AUDIO DE FALLO ---
+            NoteSpawner spawner = Object.FindFirstObjectByType<NoteSpawner>();
+            if (spawner != null)
+            {
+                spawner.PlayFailSound();
+            }
+
             if (ScoreManager.Instance != null)
             {
                 ScoreManager.Instance.RegisterMiss();

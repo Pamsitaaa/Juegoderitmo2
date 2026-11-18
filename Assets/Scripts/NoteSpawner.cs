@@ -22,6 +22,10 @@ public class NoteSpawner : MonoBehaviour
     public GameObject[] notePrefabs;
     public Transform[] spawnPoints;
 
+    [Header("Referencias de Audio (SFX)")]
+    public AudioSource sfxSource;   // AudioSource exclusivo para efectos (como el Fail)
+    public AudioClip failSound;     // Tu archivo de audio "Fail"
+
     [Header("Modo Editor / Grabación")]
     public bool isRecording = true;
 
@@ -93,19 +97,31 @@ public class NoteSpawner : MonoBehaviour
         Transform targetSpawn = spawnPoints[lane];
         GameObject selectedNotePrefab = notePrefabs[lane];
 
+        // Pedimos la nota al NotePooler usando el índice exacto del carril
         GameObject newNote = NotePooler.Instance.GetPooledNote(lane);
 
         if (newNote != null && targetSpawn != null && selectedNotePrefab != null)
         {
             newNote.transform.position = targetSpawn.position;
 
-            // ¡Forzamos que use la rotación local exacta del prefab original!
+            // Respetamos la rotación original exacta del prefab
             newNote.transform.rotation = selectedNotePrefab.transform.rotation;
 
             newNote.SetActive(true);
         }
     }
 
-
-
+    // Método para reproducir el sonido de fallo cuando lo necesites
+    // Método para reproducir el sonido de fallo de forma obligatoria y sin bloqueos
+    // Método blindado para que el sonido de fallo nunca falle ni se sature
+    // Método para reproducir el sonido de fallo encimándose (polifonía de errores)
+    public void PlayFailSound()
+    {
+        if (sfxSource != null && failSound != null)
+        {
+            // ¡Ojo aquí! Usamos PlayOneShot SIN hacer .Stop() previo.
+            // Esto permite que si te equivocas 200 veces seguidas, cada error suene a la par encima del anterior.
+            sfxSource.PlayOneShot(failSound);
+        }
+    }
 }
