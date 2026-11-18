@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class LaneController : MonoBehaviour
 {
+    [Header("Efectos de Acierto")]
+    public GameObject hitParticlesPrefab;
+
     [Header("Configuración de Carril")]
     public int laneIndex;
     public KeyCode pcKey;
@@ -91,23 +94,16 @@ public class LaneController : MonoBehaviour
                 ScoreManager.Instance.EvaluateHit(distance);
             }
 
-            // Desactivamos la nota para el Pool (¡AQUÍ NUNCA DEBE IR EL FAIL!)
-            noteToHit.SetActive(false);
-        }
-        else
-        {
-            // --- SI NO HAY NOTA (GHOST TAP / FALLO EN EL AIRE) ---
-            // AQUÍ SÍ VA EL FAIL PORQUE PRESIONASTE MAL
-            NoteSpawner spawner = Object.FindFirstObjectByType<NoteSpawner>();
-            if (spawner != null)
+            // --- ¡AQUÍ DISPARAMOS LAS PARTÍCULAS! ---
+            if (hitParticlesPrefab != null)
             {
-                spawner.PlayFailSound();
+                GameObject particles = Instantiate(hitParticlesPrefab, transform.position, Quaternion.identity);
+
+                // Lo destruimos rapidísimo (en 0.2 segundos) para que no ocupe memoria ni se quede estorbando
+                Destroy(particles, 0.2f);
             }
 
-            if (ScoreManager.Instance != null)
-            {
-                ScoreManager.Instance.RegisterGhostMiss();
-            }
+            noteToHit.SetActive(false);
         }
     }
 
